@@ -1,5 +1,9 @@
 tf = require('@tensorflow/tfjs-node')
 
+// Prepare the data
+const inputs = tf.tensor2d([[0, 0], [0, 1], [1, 0], [1, 1]]);
+const outputs = tf.tensor2d([[0], [1], [1], [0]]);
+
 // Create model
 const model = tf.sequential();
 // Create layers
@@ -10,12 +14,10 @@ const input = tf.layers.dense({
 });
 const dense1 = tf.layers.dense({
   units: 4,
-  inputShape: [4],
   activation: "relu"
 });
 const dense2 = tf.layers.dense({
   units: 4,
-  inputShape: [4],
   activation: "relu"
 });
 const output = tf.layers.dense({
@@ -30,14 +32,11 @@ model.add(output);
 // Prepare model for training
 model.summary();
 model.compile({
-  optimizer: tf.train.sgd(0.1),
+  optimizer: tf.train.sgd(0.01),
   loss: "meanSquaredError"
 });
-// Prepare the data
-const inputs = tf.tensor2d([[0, 0], [0, 1], [1, 0], [1, 1]]);
-const outputs = tf.tensor2d([[0], [1], [1], [0]]);
-// Train the model
 
+// Train the model
 const train = async () => {
     const config = { shuffle: true, epochs: 1000, batchSize: 1 };
     const response = await model.fit(inputs, outputs, config);
